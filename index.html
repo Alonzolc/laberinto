@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laberinto de la Locura</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #d8f3dc;
+        }
+        h1 {
+            font-family: Arial, sans-serif;
+            color: #264653;
+        }
+        canvas {
+            border: 2px solid black;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .row {
+            display: flex;
+        }
+        button {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Laberinto de la Locura</h1>
+    <canvas id="laberinto" width="300" height="500"></canvas>
+    <div class="controls">
+        <button onclick="movePlayer(-1, 0)">⬆️</button>
+        <div class="row">
+            <button onclick="movePlayer(0, -1)">⬅️</button>
+            <button onclick="movePlayer(0, 1)">➡️</button>
+        </div>
+        <button onclick="movePlayer(1, 0)">⬇️</button>
+    </div>
+    <script>
+        const canvas = document.getElementById("laberinto");
+        const ctx = canvas.getContext("2d");
+        
+        const cols = 30;
+        const rows = 50;
+        const cellSize = 10;
+        let maze = Array(rows).fill(null).map(() => Array(cols).fill(1));
+        let player = { x: 1, y: 0 };
+        const exit = { x: rows - 2, y: Math.floor((2 * cols) / 3) + 7 };
+
+        function generateMaze() {
+            function carvePassage(x, y) {
+                let directions = [[-2, 0], [0, 2], [2, 0], [0, -2]];
+                directions.sort(() => Math.random() - 0.5);
+                for (let [dx, dy] of directions) {
+                    let nx = x + dx, ny = y + dy;
+                    if (nx > 0 && ny > 0 && nx < rows - 1 && ny < cols - 1 && maze[nx][ny] === 1) {
+                        maze[nx][ny] = 0;
+                        maze[x + dx / 2][y + dy / 2] = 0;
+                        carvePassage(nx, ny);
+                    }
+                }
+            }
+            
+            maze[0][1] = 0; // Entrada
+            carvePassage(1, 1);
+            maze[exit.x][exit.y] = 0; // Salida
+        }
+        
+        function drawMaze() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let y = 0; y < cols; y++) {
+                for (let x = 0; x < rows; x++) {
+                    if (maze[x][y] === 1) {
+                        ctx.fillStyle = "#264653";
+                        ctx.fillRect(y * cellSize, x * cellSize, cellSize, cellSize);
+                    }
+                }
+            }
+            ctx.fillStyle = "blue";
+            ctx.fillRect(exit.y * cellSize, exit.x * cellSize, cellSize, cellSize); // Dibujar salida
+            drawPlayer();
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = "red";
+            ctx.fillRect(player.y * cellSize, player.x * cellSize, cellSize, cellSize);
+        }
+
+        function movePlayer(dx, dy) {
+            let newX = player.x + dx;
+            let newY = player.y + dy;
+            if (newX >= 0 && newY >= 0 && newX < rows && newY < cols && maze[newX][newY] === 0) {
+                player.x = newX;
+                player.y = newY;
+                drawMaze();
+                if (player.x === exit.x && player.y === exit.y) {
+                    setTimeout(() => window.location.href = "esposa.html", 100);
+                }
+            }
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowUp") movePlayer(-1, 0);
+            if (e.key === "ArrowDown") movePlayer(1, 0);
+            if (e.key === "ArrowLeft") movePlayer(0, -1);
+            if (e.key === "ArrowRight") movePlayer(0, 1);
+        });
+
+        generateMaze();
+        drawMaze();
+    </script>
+</body>
+</html>

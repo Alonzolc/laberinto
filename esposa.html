@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Digital para Mi Amor</title>
+    <style>
+        body {
+            background-color: #ffdde1;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            overflow: hidden;
+        }
+        .carta {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+            max-width: 600px;
+            position: relative;
+        }
+        .mensaje {
+            font-size: 18px;
+            color: #ff3366;
+            white-space: pre-wrap;
+            overflow: hidden;
+            border-right: 3px solid #ff3366;
+            width: 100%;
+        }
+        .boton {
+            background-color: #ff3366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .boton:hover {
+            background-color: #ff6699;
+        }
+        .corazon {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            animation: flotar 4s linear infinite;
+        }
+        @keyframes flotar {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        #sorpresa {
+            margin-top: 20px;
+            display: none;
+        }
+        #imagenSorpresa {
+            width: 500px;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="carta">
+        <h2>Para Mi Esposa Loca ❤️</h2>
+        <p class="mensaje" id="mensaje"></p>
+        <button class="boton" onclick="mostrarSorpresa()">Presiona para ver la sorpresa 🎁</button>
+        <p id="sorpresa">Quieres ser mi san valentin este 14 amorcito? ir a comer y pasear como locos? 💖</p>
+        <img id="imagenSorpresa" src="esposaloca.png" alt="Sorpresa">
+    </div>
+
+    <script>
+        const mensaje = "Hola mi vida ❤️ ,\n\nQuería escribirte esta carta para decirte lo mucho que te quiero, cada día a tu lado es un regalo, y no hay nada en este mundo que me haga más feliz que verte sonreír ❤️.\n\nGracias por ser mi compañera, mi mejor amiga y el amor de mi vida.\n\nSiempre a tu lado. ❤️";
+        let i = 0;
+        function escribirTexto() {
+            if (i < mensaje.length) {
+                document.getElementById("mensaje").textContent += mensaje.charAt(i);
+                i++;
+                setTimeout(escribirTexto, 50);
+            }
+        }
+        window.onload = escribirTexto;
+
+        function mostrarSorpresa() {
+            document.getElementById("sorpresa").style.display = "block";
+            document.getElementById("imagenSorpresa").style.display = "block";
+        }
+
+        function crearCorazon() {
+            const corazon = document.createElement("div");
+            corazon.innerHTML = "❤️";
+            corazon.classList.add("corazon");
+            document.body.appendChild(corazon);
+            corazon.style.left = Math.random() * 100 + "vw";
+            corazon.style.animationDuration = Math.random() * 3 + 2 + "s";
+            setTimeout(() => corazon.remove(), 4000);
+        }
+        setInterval(crearCorazon, 500);
+    </script>
+</body>
+</html>
+
+
